@@ -9,17 +9,15 @@ int matchstar(char *text, char c, char *regexp);
 
 int main(int argc, char *argv[]) {
     FILE *file = stdin; // Default to stdin
-    char *path = NULL;
 
-    // Check if a file path is provided
-    if (argv[1][0] != '-') {
-        path = argv[1];
-        file = fopen(path, "r");
+    if (argv[1][0] != '-' || argv[1][1] != '\0') {
+        file = fopen(argv[1], "r");
         if (!file) {
-            perror("Error opening file");
+            fprintf(stderr, "Error occurred\n");
             return 1;
         }
     }
+
 
     // Check if a pattern is provided
     char *pattern = argv[2];
