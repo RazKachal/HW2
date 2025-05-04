@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     // Check if a pattern is provided
     char *pattern = argv[2];
     if (!pattern || *pattern == '\0') { // Check for empty pattern
-        fprintf(stderr, "Error: empty pattern\n");
+        fprintf(stderr, "Error occured\n");
         return 1;
     }
 
