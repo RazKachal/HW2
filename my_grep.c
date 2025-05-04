@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     char *path = NULL;
 
     // Check if a file path is provided
-    if (argc == 2 && strcmp(argv[1], "-") != 0) {
+    if (argv[1][0] != "-") {
         path = argv[1];
         file = fopen(path, "r");
         if (!file) {
