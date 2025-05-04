@@ -1,6 +1,5 @@
-// filepath: /home/mamat/Documents/HW2/my_grep.c
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 
 #define BUFSIZE 1024
 
@@ -13,7 +12,7 @@ int main(int argc, char *argv[]) {
     char *path = NULL;
 
     // Check if a file path is provided
-    if (argv[1][0] != "-") {
+    if (argv[1][0] != '-') {
         path = argv[1];
         file = fopen(path, "r");
         if (!file) {
@@ -21,33 +20,27 @@ int main(int argc, char *argv[]) {
             return 1;
         }
     }
+
     // Check if a pattern is provided
     char *pattern = argv[2];
-    if (!pattern) {
-        fprintf(stderr, "Usage: %s <pattern> [<file>]\n", argv[0]);
-        return 1;
-    }
-    // Check if the pattern is empty
-    if (strlen(pattern) == 0) {
+    if (!pattern || *pattern == '\0') { // Check for empty pattern
         fprintf(stderr, "Error: empty pattern\n");
         return 1;
     }
-    // Check if the pattern is a valid regular expression
-    for (int i = 0; pattern[i] != '\0'; i++) {
-        if (pattern[i] == '*' || pattern[i] == '$' || pattern[i] == '^') {
-            fprintf(stderr, "Error: invalid pattern %s\n", pattern);
-            return 1;
-        }
-    }
-    // Check if the file is opened successfully
-    if (!file) {
-        perror("Error opening file");
-        return 1;
-    }
+
     // Read the file line by line
     char buf[BUFSIZE];
     while (fgets(buf, BUFSIZE, file)) {
-        buf[strcspn(buf, "\n")] = '\0'; // Replace '\n' with '\0'
+        // Replace '\n' with '\0' manually
+        char *newline = buf;
+        while (*newline != '\0') {
+            if (*newline == '\n') {
+                *newline = '\0';
+                break;
+            }
+            newline++;
+        }
+
         if (match(buf, pattern)) {
             printf("%s\n", buf);
         }
@@ -93,6 +86,6 @@ int matchstar(char *text, char c, char *regexp) {
         if (matchhere(text, regexp)) {
             return 1;
         }
-    } while (*text != '\0' && (*text++ == c || c == '.'));
+    } while (*text != '\0' && (c == '.' || *text++ == c));
     return 0;
 }
